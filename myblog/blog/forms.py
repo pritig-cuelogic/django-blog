@@ -23,6 +23,4 @@ class LoginForm(AuthenticationForm):
 class CreatePostForm(forms.Form):
 	title = forms.CharField(max_length=200)
 	content = forms.CharField(widget=forms.Textarea)
-	Category = forms.ModelChoiceField(
-		queryset=Category.objects.all().order_by('id'),
-		 empty_label="select category",to_field_name="id")
+	tags = forms.CharField(max_length=200)

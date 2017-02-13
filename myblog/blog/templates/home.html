@@ -10,7 +10,7 @@ welcome home
    {% for p in post %}
        <tr>
            <td> {{ p.title }}</td> 
-           <td>hhh</td>
+           <td><a href="/blog/editpost/{{p.id}}">Edit</a></td>
        </tr>
    {% endfor %}
 </table>

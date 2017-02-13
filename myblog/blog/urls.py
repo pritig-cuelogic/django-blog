@@ -11,4 +11,6 @@ urlpatterns = [
         'authentication_form': LoginForm},name = 'login'),
     url(r'home/$', views.home, name='home'),
     url(r'createpost/$', views.createpost, name='createpost'),
+    url(r'editpost/(?P<post_id>\d+)$', views.editpost, name='editpost'),
+    url(r'get_tags/$', views.get_tags, name='get_tags'),
 ]
