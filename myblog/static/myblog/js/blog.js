@@ -1,5 +1,13 @@
 $(function() {
-         tags_id_arr = []
+         var tag_hidden = $("#hidden_tag").val();
+         var tags_id_arr
+         if(tag_hidden) {
+             tags_id_arr = tag_hidden.split(",")
+         }
+         else{
+            tags_id_arr = []
+         }
+        
         function split( val ) {
       return val.split( /,\s*/ );
     }
@@ -12,6 +20,7 @@ $(function() {
             $( this ).autocomplete( "instance" ).menu.active ) {
           event.preventDefault();
         }
+        
       })
   .autocomplete({
             source: function( request, response ) {

@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Edit Post{% endblock %}
+{% block content %}
+
+<form method="post" action="./{{post_id}}">
+{% csrf_token %}
+    <table border="0">
+        <tr>
+            <td> Post Title  </td>
+            <td> {{ form.title}} </td>
+        </tr>
+        <tr>
+            <td> Post Description  </td>
+            <td> {{ form.content}} </td>
+        </tr>
+        <tr>
+            <td> Post category  </td>
+            <td>
+            <select id="id_category" name="category">
+                    <option value="">Select category</option>
+                    {% for cat in category %}
+                    <option value= {{cat.id}}
+                    {% if cat.id == category_id %}selected="selected"{% endif %}>
+                     {{cat.name}}</option>
+                    {% endfor %}
+                </select><br>
+            </td>
+        </tr>
+        <tr>
+            <td> Post Tags  
+                <input type="hidden" id= "hidden_tag" value="{% if tags_id  %} {{tags_id}} {% endif %}"
+                 name="hidden_tag">
+            </td>
+            <td><div class="ui-widget"> {{ form.tags}}</div> </td>
+        </tr>
+    </table>
+    
+    <input type="submit" value="Update Post" />
+</form>
+
+<link rel="stylesheet" href="{% static 'myblog/css/jquery-ui.css' %}"
+ type="text/css" media="all" />
+<script src="{% static 'myblog/js/jquery.min.js' %}" type="text/javascript">
+</script> 
+<script src="{% static 'myblog/js/jquery-ui.min.js' %}" 
+type="text/javascript"></script>
+<script src="{% static 'myblog/js/blog.js' %}"></script>
+{% endblock %}
