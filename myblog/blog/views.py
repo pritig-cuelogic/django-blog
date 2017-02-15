@@ -36,7 +36,7 @@ def register(request):
 		     'form': form
 		 })
 
-def adminregister(request):
+def adminregistration(request):
 
     if request.method == 'POST':
         form = RegisterForm(request.POST)
@@ -48,7 +48,7 @@ def adminregister(request):
 
                 )
             u = UserRole(user=user, role_id = 1)
-            print u.query
+            u.save()
             return render(request, 'success.html',
                 {
                  'admin': 1
@@ -62,9 +62,10 @@ def adminregister(request):
 
 @login_required(login_url="login/")
 def home(request):
-	post = Post.objects.filter(user_id = request.user.id)
-	return render(request,"home.html",
-		{
+
+    post = Post.objects.filter(user_id = request.user.id)
+    return render(request,"home.html",
+        {
 		 'post': post
 		})
 
