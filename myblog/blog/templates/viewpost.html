@@ -11,5 +11,20 @@
 		<div>Category: {{category_name}} | Tag: {{tag_name}}</div>
 		<p>{{post_content}}</p>
 	</div>
+	<h5>Comments</h5>
+	{% if comments.count >= 1 %}
+	    <ul>
+        {% for comment in comments %}
+            <li>{{comment.comment_text}}</li>
+        {% endfor %}
+        </ul>
+	{% endif %}
+	<form method="post" action="../savecomment/{{post_id}}">
+	{% csrf_token %}
+	<div>{{CommentForm.comment}}
+     <input type="submit" value="post" />
+	</div>
+    
+    </form>
 </body>
 </html>
