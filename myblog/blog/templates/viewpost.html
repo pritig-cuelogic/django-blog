@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>{{ post_title }}</title>
+</head>
+<body>
+	<div style="width: 1000px;">
+		<h2>{{ post_title }}</h2>
+		<br>
+		<div>by {{user_name}}</div>
+		<div>Category: {{category_name}} | Tag: {{tag_name}}</div>
+		<p>{{post_content}}</p>
+	</div>
+	<h5>Comments</h5>
+	{% if comments.count >= 1 %}
+	    <ul>
+        {% for comment in comments %}
+            <li>{{comment.comment_text}}</li>
+        {% endfor %}
+        </ul>
+	{% endif %}
+	<form method="post" action="../savecomment/{{post_id}}">
+	{% csrf_token %}
+	<div>{{CommentForm.comment}}
+     <input type="submit" value="post" />
+	</div>
+    
+    </form>
+</body>
+</html>

@@ -7,7 +7,7 @@ from django.utils import timezone
 import json
 from django.urls import reverse
 from blog.forms import *
-from .models import UserRole, Post, Category, Tags, PostCategory, PostTag
+from .models import UserRole, Post, Category, Tags, PostCategory, PostTag, Comment
 
 @csrf_protect
 def register(request):
@@ -152,8 +152,6 @@ def editpost(request, post_id):
         
         tags = ''
         for pt in posts_tag_id:
-            print pt.tag.id
-            print pt.tag.name
             tags += pt.tag.name + ', '
             
         data = {'title': posts.title, 'content': posts.content, 'tags': tags}
@@ -164,4 +162,52 @@ def editpost(request, post_id):
              'category_id': posts_cat.category.id,
              'post_id': post_id
          })
-    
+
+def deletepost(request, post_id):
+
+    Post.objects.filter(id=post_id).delete()
+    return HttpResponseRedirect(reverse('blog:home'))
+
+def viewpost(request, post_id):
+
+    post_tag = PostTag.objects.filter(post_id = post_id)
+    post_cat = PostCategory.objects.filter(post_id = post_id)
+    comments = Comment.objects.filter(post_id = post_id)
+    tag_name = ''
+    for pt in post_tag:
+        tag_name += pt.tag.name.title() + ', '
+        
+    tag_name = tag_name[:-2]
+    for pc in post_cat:
+        category_name = pc.category.name.title()
+        post_title = pc.post.title.title()
+        post_content = pc.post.content
+        user_name = pc.post.user.username.title()
+
+    comment_form = CommentForm()
+    return render(request, 'viewpost.html', {
+             'category_name': category_name,
+             'post_title': post_title,
+             'post_content': post_content,
+             'user_name': user_name,
+             'tag_name': tag_name,
+             'CommentForm': CommentForm,
+             'post_id': post_id,
+             'comments': comments,
+         })
+
+def savecomment(request, post_id):
+    user_id =request.user.id
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.cleaned_data['comment']
+            Comment.objects.create(
+                comment_text = comment,
+                post = Post(id = post_id),
+                user = User(id = user_id),
+                created_at = timezone.now()
+                )
+        return HttpResponseRedirect(reverse('blog:viewpost', args=[post_id]))
+
+
