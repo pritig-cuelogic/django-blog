@@ -1,0 +1,17 @@
+welcome home
+{% block content %}
+<a href="/blog/createpost">Add Post</a>
+<h1>Hello</h1>
+<table border="2">
+   <tr>
+        <th>Post Title</th>
+        <th>Action </th>
+   </tr>
+   {% for p in post %}
+       <tr>
+           <td> {{ p.title }}</td> 
+           <td><a href="/blog/editpost/{{p.id}}">Edit</a></td>
+       </tr>
+   {% endfor %}
+</table>
+{% endblock %}
