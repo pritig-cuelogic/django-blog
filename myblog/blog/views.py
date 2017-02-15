@@ -152,8 +152,6 @@ def editpost(request, post_id):
         
         tags = ''
         for pt in posts_tag_id:
-            print pt.tag.id
-            print pt.tag.name
             tags += pt.tag.name + ', '
             
         data = {'title': posts.title, 'content': posts.content, 'tags': tags}
@@ -169,3 +167,25 @@ def deletepost(request, post_id):
 
     Post.objects.filter(id=post_id).delete()
     return HttpResponseRedirect(reverse('blog:home'))
+
+def viewpost(request, post_id):
+
+    post_tag = PostTag.objects.filter(post_id = post_id)
+    post_cat = PostCategory.objects.filter(post_id = post_id)
+    tag_name = ''
+    for pt in post_tag:
+        tag_name += pt.tag.name.title() + ', '
+        
+    tag_name = tag_name[:-2]
+    for pc in post_cat:
+        category_name = pc.category.name.title()
+        post_title = pc.post.title.title()
+        post_content = pc.post.content
+        user_name = pc.post.user.username.title()
+    return render(request, 'viewpost.html', {
+             'category_name': category_name,
+             'post_title': post_title,
+             'post_content': post_content,
+             'user_name': user_name,
+             'tag_name': tag_name
+         })
