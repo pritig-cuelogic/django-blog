@@ -1,6 +1,6 @@
 $(function() {
-         tags_id_arr = []
-        function split( val ) {
+         
+    function split( val ) {
       return val.split( /,\s*/ );
     }
     function extractLast( term ) {
@@ -12,6 +12,7 @@ $(function() {
             $( this ).autocomplete( "instance" ).menu.active ) {
           event.preventDefault();
         }
+        
       })
   .autocomplete({
             source: function( request, response ) {
@@ -35,7 +36,6 @@ $(function() {
                 terms.push( "" );
                 this.value = terms.join( ", " );
                 tags_id_arr.push(ui.item.id)
-                $("#hidden_tag").val(tags_id_arr)
                 return false;
             }
     });

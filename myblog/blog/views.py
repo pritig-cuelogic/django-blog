@@ -51,9 +51,16 @@ def createpost(request):
         form = CreatePostForm(request.POST)
         if form.is_valid():
             cat_id = request.POST.get('category', '')
-            tag = (cat_id,request.POST.get('hidden_tag', ''))
-            print "cat = %r and tag = %r and form = %r" % (cat_id,request.POST.get('hidden_tag', ''), form.cleaned_data)
-            tag_list = set(tag[1].split(','))
+            tag_names = form.cleaned_data['tags']
+            tag_names = tag_names[:-1]
+            tag_name_list = tag_names.split(', ')
+            tags = Tags.objects.all().order_by('id')
+            tag_id_arr = []
+            for tags_n in tag_name_list:
+                for tag_obj in tags:
+                    if tags_n == tag_obj.name:
+                        tag_id_arr.append(tag_obj.id)
+                        break
             post = Post.objects.create(
                 title = form.cleaned_data['title'],
                 content = form.cleaned_data['content'],
@@ -66,7 +73,7 @@ def createpost(request):
                 category = Category(id = cat_id)
 
                 )
-            for tag_id in tag_list:
+            for tag_id in tag_id_arr:
                 PostTag.objects.create(
                     post = post,
                     tag = Tags(id = tag_id)
@@ -106,4 +113,55 @@ def get_tags(request):
     return HttpResponse(data, mimetype)
 
 def editpost(request, post_id):
-    return HttpResponse("hiii")
+
+    cat =  Category.objects.all().order_by('id')
+    if request.method == 'POST':
+        form = CreatePostForm(request.POST)
+        if form.is_valid():
+            cat_id = request.POST.get('category', '')
+            tag_names = form.cleaned_data['tags']
+            tag_names = tag_names[:-1]
+            tag_name_list = tag_names.split(', ')
+            tags = Tags.objects.all().order_by('id')
+            tag_id_arr = []
+            for tags_n in tag_name_list:
+                for tag_obj in tags:
+                    if tags_n == tag_obj.name:
+                        tag_id_arr.append(tag_obj.id)
+                        break
+            Post.objects.filter(id=post_id).update(
+               title=form.cleaned_data['title'],
+               content = form.cleaned_data['content'],
+               updated_at = timezone.now()
+            )
+            PostCategory.objects.filter(post_id = post_id).update(
+                category = Category(id = cat_id)
+                )
+            PostTag.objects.filter(post_id = post_id).delete()
+            for tag_id in tag_id_arr:
+                if tag_id:
+                    PostTag.objects.create(
+                        post = Post(id=post_id),
+                        tag = Tags(id = tag_id)
+                    )
+        return HttpResponseRedirect(reverse('blog:home'))
+    else:
+        posts = Post.objects.get(id=post_id)
+        posts_cat = PostCategory.objects.get(post_id = post_id)
+        posts_tag_id = PostTag.objects.filter(post_id = post_id)
+        
+        tags = ''
+        for pt in posts_tag_id:
+            print pt.tag.id
+            print pt.tag.name
+            tags += pt.tag.name + ', '
+            
+        data = {'title': posts.title, 'content': posts.content, 'tags': tags}
+        form = CreatePostForm(initial=data)
+        return render(request, 'editpost.html', {
+             'form': form,
+             'category': cat,
+             'category_id': posts_cat.category.id,
+             'post_id': post_id
+         })
+    
