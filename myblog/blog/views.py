@@ -119,8 +119,16 @@ def editpost(request, post_id):
         form = CreatePostForm(request.POST)
         if form.is_valid():
             cat_id = request.POST.get('category', '')
-            tag = request.POST.get('hidden_tag', '')
-            tag_list = tag.split(',')
+            tag_names = form.cleaned_data['tags']
+            tag_names = tag_names[:-1]
+            tag_name_list = tag_names.split(', ')
+            tags = Tags.objects.all().order_by('id')
+            tag_id_arr = []
+            for tags_n in tag_name_list:
+                for tag_obj in tags:
+                    if tags_n == tag_obj.name:
+                        tag_id_arr.append(tag_obj.id)
+                        break;
             Post.objects.filter(id=post_id).update(
                title=form.cleaned_data['title'],
                content = form.cleaned_data['content'],
@@ -130,34 +138,30 @@ def editpost(request, post_id):
                 category = Category(id = cat_id)
                 )
             PostTag.objects.filter(post_id = post_id).delete()
-            for tag_id in tag_list:
+            for tag_id in tag_id_arr:
                 if tag_id:
                     PostTag.objects.create(
                         post = Post(id=post_id),
                         tag = Tags(id = tag_id)
                     )
-                
         return HttpResponseRedirect(reverse('blog:home'))
     else:
         posts = Post.objects.get(id=post_id)
         posts_cat = PostCategory.objects.get(post_id = post_id)
-        posts_tag = PostTag.objects.filter(post_id = post_id)
+        posts_tag_id = PostTag.objects.filter(post_id = post_id)
+        
         tags = ''
-        tags_id = ''
-        for pt in posts_tag:
+        for pt in posts_tag_id:
             print pt.tag.id
             print pt.tag.name
-            tags += pt.tag.name + ','
-            tags_id += str(pt.tag.id) + ','
-
-        tags_id = tags_id[:-1]    
+            tags += pt.tag.name + ', '
+            
         data = {'title': posts.title, 'content': posts.content, 'tags': tags}
         form = CreatePostForm(initial=data)
         return render(request, 'editpost.html', {
              'form': form,
              'category': cat,
              'category_id': posts_cat.category.id,
-             'tags_id': tags_id,
              'post_id': post_id
          })
     

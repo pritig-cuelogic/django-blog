@@ -1,14 +1,6 @@
 $(function() {
-         var tag_hidden = $("#hidden_tag").val();
-         var tags_id_arr
-         if(tag_hidden) {
-             tags_id_arr = tag_hidden.split(",")
-         }
-         else{
-            tags_id_arr = []
-         }
-        
-        function split( val ) {
+         
+    function split( val ) {
       return val.split( /,\s*/ );
     }
     function extractLast( term ) {
@@ -44,7 +36,6 @@ $(function() {
                 terms.push( "" );
                 this.value = terms.join( ", " );
                 tags_id_arr.push(ui.item.id)
-                $("#hidden_tag").val(tags_id_arr)
                 return false;
             }
     });
