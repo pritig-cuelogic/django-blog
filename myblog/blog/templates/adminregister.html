@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}User Registration{% endblock %}
+{% block content %}
+{% if form.errors %}
+    {% if form.errors.password2 %}
+    	{{ form.errors.password2 }}
+    {% endif %}
+{% endif %}
+<form method="post" action=".">
+{% csrf_token %}
+    <table border="0">
+        {{ form.as_table }}
+    </table>
+    <input type="submit" value="Register" />
+</form>
+{% endblock %}
