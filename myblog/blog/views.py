@@ -60,7 +60,7 @@ def createpost(request):
                 for tag_obj in tags:
                     if tags_n == tag_obj.name:
                         tag_id_arr.append(tag_obj.id)
-                        break;
+                        break
             post = Post.objects.create(
                 title = form.cleaned_data['title'],
                 content = form.cleaned_data['content'],
@@ -128,7 +128,7 @@ def editpost(request, post_id):
                 for tag_obj in tags:
                     if tags_n == tag_obj.name:
                         tag_id_arr.append(tag_obj.id)
-                        break;
+                        break
             Post.objects.filter(id=post_id).update(
                title=form.cleaned_data['title'],
                content = form.cleaned_data['content'],
