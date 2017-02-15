@@ -164,4 +164,8 @@ def editpost(request, post_id):
              'category_id': posts_cat.category.id,
              'post_id': post_id
          })
-    
+
+def deletepost(request, post_id):
+
+    Post.objects.filter(id=post_id).delete()
+    return HttpResponseRedirect(reverse('blog:home'))

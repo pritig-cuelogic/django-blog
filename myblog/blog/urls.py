@@ -12,5 +12,6 @@ urlpatterns = [
     url(r'home/$', views.home, name='home'),
     url(r'createpost/$', views.createpost, name='createpost'),
     url(r'editpost/(?P<post_id>\d+)$', views.editpost, name='editpost'),
+    url(r'deletepost/(?P<post_id>\d+)$', views.deletepost, name='deletepost'),
     url(r'get_tags/$', views.get_tags, name='get_tags'),
 ]
