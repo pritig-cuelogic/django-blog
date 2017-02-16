@@ -15,6 +15,7 @@ class Comment(models.Model):
 	comment_text = models.TextField()
 	post = models.ForeignKey(Post, on_delete=models.CASCADE)
 	user = models.ForeignKey(User, on_delete=models.CASCADE)
+	is_like = models.IntegerField(default=0)
 	created_at = models.DateTimeField()
 
 class Category(models.Model):
