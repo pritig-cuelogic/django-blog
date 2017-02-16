@@ -4,6 +4,7 @@
 <title>{{ post_title }}</title>
 </head>
 <body>
+    <a href="/blog/dashboard">Dashboard</a>
     {% load static %}
 	<div style="width: 1000px;">
 	    <div><a href="/logout">Logout</a></div>
@@ -17,21 +18,28 @@
 	{% if comments.count >= 1 %}
 	    <ul>
         {% for comment in comments %}
-            <div id="comment{{ comment.id }}">
+            <div id="comment{{comment.id}}">
             <li>{{comment.comment_text}}</li>
             {% if role_id == 1 or user_id == post_user_id %}
-            <input type="button" value="like" id="like{{ comment.id }}"
-             onclick="manageCommentLike(this.id)"
-              {% if comment.is_like == 2%} hidden="hidden" {% endif %} />
-            <input type="button" value="Unlike" id="unlike{{ comment.id }}"
-             onclick="manageCommentLike(this.id)" 
-             {% if comment.is_like == 1  %} hidden="hidden" {% endif %}
-             />
-             <input type="button" value="delete" id="delete{{ comment.id }}"
+            <input type="button" value="delete" id="delete{{ comment.id }}"
              onclick="deleteComment(this.id)"
              >
              </div>
+
              {% endif %}
+             <input type="hidden" id="hiddenlike{{comment.id}}"
+              value="{{comment.like_count}}">
+             <input type="button" value="like" id="like{{ comment.id }}"
+             onclick="manageCommentLike(this.id)"
+             {% if comment.is_like == 1%} hidden="hidden" {% endif %} />
+             <input type="hidden" id="hiddenunlike{{comment.id}}"
+              value="{{comment.unlike_count}}">
+            
+            <input type="button" value="Unlike" id="unlike{{ comment.id }}"
+             onclick="manageCommentLike(this.id)" 
+             {% if comment.is_like == 2 %} hidden="hidden" {% endif %}
+             />
+             
         {% endfor %}
         </ul>
 	{% endif %}

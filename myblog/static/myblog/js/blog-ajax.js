@@ -1,11 +1,20 @@
 function manageCommentLike(id){
        var like_val = 0;
+       var count;
        var id_num = getNumericVal(id) ;
-       (id == 'like'+id_num)?like_val = 1: like_val = 2;
+       if (id == 'like'+id_num) {
+             like_val = 1 ;
+             count = $("#hiddenlike"+id_num).val();
+         }
+         else {
+          like_val = 2 ;
+          count = $("#hiddenunlike"+id_num).val();
+         } 
        	
        $.getJSON( "/blog/manage_like", {
                     cat_id: id_num,
-                    like_val: like_val
+                    like_val: like_val,
+                    like_unlike_count: count
         }, function(data,status,xhr){
         	if(status == 'success'){
         		if(id == 'like'+id_num){
@@ -25,9 +34,8 @@ function deleteComment(id){
   var id_num = getNumericVal(id);
   $.getJSON( "/blog/delete_comment", {
           cat_id: id_num
-        },function(data, status){
-            
-              document.getElementById("comment"+id_num).style.visibility='hidden'
+        },function(data, status,xhr){
+              $("#comment"+id_num).hide(); 
            
         });
 }
