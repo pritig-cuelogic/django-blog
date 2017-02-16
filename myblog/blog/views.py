@@ -63,10 +63,14 @@ def adminregistration(request):
 @login_required(login_url="login/")
 def home(request):
 
-    post = Post.objects.filter(user_id = request.user.id)
+    user_role = UserRole.objects.filter(user_id = request.user.id)
+    role_id = user_role[0].role_id
+    post = Post.objects.filter()
     return render(request,"home.html",
         {
-		 'post': post
+		 'post': post,
+         'role_id': role_id,
+         'user_id': request.user.id
 		})
 
 def createpost(request):

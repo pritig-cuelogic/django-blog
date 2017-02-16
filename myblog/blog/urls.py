@@ -16,5 +16,6 @@ urlpatterns = [
     url(r'deletepost/(?P<post_id>\d+)$', views.deletepost, name='deletepost'),
     url(r'viewpost/(?P<post_id>\d+)$', views.viewpost, name='viewpost'),
     url(r'savecomment/(?P<post_id>\d+)$', views.savecomment, name='savecomment'),
-    url(r'get_tags/$', views.get_tags, name='get_tags'),
+    url(r'get_tags/$', views.get_tags, name='get_tags')
+
 ]
