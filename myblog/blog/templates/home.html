@@ -1,6 +1,8 @@
+{% extends "base.html" %}
 welcome home
 {% block content %}
 <a href="/blog/createpost">Add Post</a>
+<div><a href="/logout">Logout</a></div>
 <h1>Hello</h1>
 <table border="2">
    <tr>
@@ -10,8 +12,11 @@ welcome home
    {% for p in post %}
        <tr>
            <td> {{ p.title }}</td> 
-           <td><a href="/blog/editpost/{{p.id}}">Edit</a>
+           <td>
+           {% if role_id == 1 or user_id == p.user.id %}
+           <a href="/blog/editpost/{{p.id}}">Edit</a>
            <a href="/blog/deletepost/{{p.id}}">Delete</a>
+           {% endif %}
            <a href="/blog/viewpost/{{p.id}}">View</a>
            </td>
        </tr>

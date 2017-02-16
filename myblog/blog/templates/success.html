@@ -1,5 +1,10 @@
 {% extends "base.html" %}
 {% block content %}
-Registered Successfully.
+{% if admin == 1 %}
+    Admin Registered Successfully.
+    {% else %}
+      User registered successfully.
+{% endif %}
+
    <a href="/blog/login">Login</a>
 {% endblock %}
