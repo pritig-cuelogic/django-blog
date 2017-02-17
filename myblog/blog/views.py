@@ -74,7 +74,13 @@ def dashboard(request):
 		})
 
 def home(request):
-        return HttpResponse("hello")
+
+        comments = Comment.objects.all().order_by('post_id')
+        return render(request,"home.html",
+            {
+             'comments': comments
+            
+            })
 
 def createpost(request):
 
