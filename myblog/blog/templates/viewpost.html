@@ -6,6 +6,7 @@
 <body>
     <a href="/blog/dashboard">Dashboard</a>
     {% load static %}
+    {% load mathfilters %}
 	<div style="width: 1000px;">
 	    <div><a href="/logout">Logout</a></div>
 		<h2>{{ post_title }}</h2>
@@ -28,18 +29,13 @@
              <input type="hidden" id="hiddenlike{{comment.id}}"
               value="{{comment.like_count}}">
              <input type="button" value="like" id="like{{ comment.id }}"
-             onclick="manageCommentLike(this.id)"
-             {% if comment.is_like == 1%} hidden="hidden" {% endif %} />
+             onclick="manageCommentLike(this.id)" />
             <input type="hidden" id="hiddenunlike{{comment.id}}"
               value="{{comment.unlike_count}}">
             <input type="button" value="Unlike" id="unlike{{ comment.id }}"
-             onclick="manageCommentLike(this.id)" 
-             {% if comment.is_like == 2 %} hidden="hidden" {% endif %}
-             />
+             onclick="manageCommentLike(this.id)" />
              <input type="text" id="liketext{{comment.id}}" placeholder="count"
-             {% if comment.is_like == 1 %} value="{{comment.like_count}}"{% endif %}
-             {% if comment.is_like == 2 %} value="{{comment.unlike_count}}"{% endif %}
-             {% if comment.is_like == 0 %} value=" "{% endif %}
+              value="{{comment.like_count|sub:comment.unlike_count }}"
               style="width:100px;">
              </div>
 

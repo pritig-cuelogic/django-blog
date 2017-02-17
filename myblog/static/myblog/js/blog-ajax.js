@@ -20,15 +20,16 @@ function manageCommentLike(id){
         	if(status == 'success'){
         		if(id == 'like'+id_num){
               $("#hiddenlike"+id_num).val(data);
-        			$("#like"+id_num).hide();
-       	      $("#unlike"+id_num).show();
-                          	}
+        			
+              }
         		else{
-					      $("#like"+id_num).show();
-       	   			$("#unlike"+id_num).hide();
-                $("#hiddenunlike"+id_num).val(data);
+					      $("#hiddenunlike"+id_num).val(data);
         		}
-            $("#liketext"+id_num).val(data);
+            var like_c = $("#hiddenlike"+id_num).val();
+            var unlike_c = $("#hiddenunlike"+id_num).val();
+            var final_val = like_c - unlike_c;
+            final_val >0 ?final_val = final_val :final_val =0;
+            $("#liketext"+id_num).val(final_val);
         	}
          
         } );
