@@ -257,8 +257,9 @@ def manage_like(request):
     if request.is_ajax():
         cat_id = request.GET.get('cat_id', '')
         like_val = request.GET.get('like_val', '')
+        like_val = int(like_val)
         like_unlike_count = request.GET.get('like_unlike_count', '')
-        like_unlike_count = int(like_unlike_count);
+        like_unlike_count = int(like_unlike_count)
         like_unlike_count += 1
         if like_val == 1:
             comments = Comment.objects.filter(id = cat_id ).update(
@@ -270,8 +271,7 @@ def manage_like(request):
                 is_like = like_val,
                 unlike_count = like_unlike_count
             )
-
-        data = ''
+        data = json.dumps(like_unlike_count)
     else:
         data = 'fail'
     mimetype = 'application/json'
