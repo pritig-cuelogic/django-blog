@@ -21,14 +21,14 @@ function manageCommentLike(id){
         		if(id == 'like'+id_num){
               $("#hiddenlike"+id_num).val(data);
         			$("#like"+id_num).hide();
-       	            $("#unlike"+id_num).show();
-            	}
+       	      $("#unlike"+id_num).show();
+                          	}
         		else{
 					      $("#like"+id_num).show();
        	   			$("#unlike"+id_num).hide();
                 $("#hiddenunlike"+id_num).val(data);
         		}
-            
+            $("#liketext"+id_num).val(data);
         	}
          
         } );
@@ -48,14 +48,3 @@ function getNumericVal(id){
   return id.replace( /^\D+/g, '');
 }
 
-function showLikeUnlikeCount(value, id){
-
-    var id_num = getNumericVal(id);
-    if(value == 'like'){
-      $("#liketext"+id_num).val($("#hiddenlike"+id_num).val());
-    }
-    else{
-      $("#liketext"+id_num).val($("#hiddenunlike"+id_num).val());
-    }
-    
-}
