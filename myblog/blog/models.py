@@ -9,12 +9,16 @@ class Post(models.Model):
 	user = models.ForeignKey(User, on_delete=models.CASCADE)
 	created_at = models.DateTimeField()
 	updated_at = models.DateTimeField()
+	viewers = models.IntegerField(default=0)
 	is_active =  models.BooleanField(default=1)
 
 class Comment(models.Model):
 	comment_text = models.TextField()
 	post = models.ForeignKey(Post, on_delete=models.CASCADE)
 	user = models.ForeignKey(User, on_delete=models.CASCADE)
+	is_like = models.IntegerField(default=0)
+	like_count = models.IntegerField(default=0)
+	unlike_count = models.IntegerField(default=0)
 	created_at = models.DateTimeField()
 
 class Category(models.Model):

@@ -7,11 +7,17 @@ welcome home
 <table border="2">
    <tr>
         <th>Post Title</th>
+        <th>Total comments</th>
+        <th>View</th>
+        <th>Post Updated</th>
         <th>Action </th>
    </tr>
    {% for p in post %}
        <tr>
-           <td> {{ p.title }}</td> 
+           <td> {{ p.title }}</td>
+           <td> {{p.comment__count}} </td>
+           <td> {{p.viewers}} </td>
+           <td> {{ p.updated_at|date:"d M Y" }} </td>
            <td>
            {% if role_id == 1 or user_id == p.user.id %}
            <a href="/blog/editpost/{{p.id}}">Edit</a>

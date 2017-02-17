@@ -10,12 +10,14 @@ urlpatterns = [
     url(r'^login/$', auth_views.login, {'template_name': 'login.html', 
         'authentication_form': LoginForm},name = 'login'),
     url(r'adminregistration/$', views.adminregistration, name='adminregistration'),
-    url(r'home/$', views.home, name='home'),
+    url(r'dashboard/$', views.dashboard, name='dashboard'),
     url(r'createpost/$', views.createpost, name='createpost'),
     url(r'editpost/(?P<post_id>\d+)$', views.editpost, name='editpost'),
     url(r'deletepost/(?P<post_id>\d+)$', views.deletepost, name='deletepost'),
     url(r'viewpost/(?P<post_id>\d+)$', views.viewpost, name='viewpost'),
     url(r'savecomment/(?P<post_id>\d+)$', views.savecomment, name='savecomment'),
-    url(r'get_tags/$', views.get_tags, name='get_tags')
-
+    url(r'get_tags/$', views.get_tags, name='get_tags'),
+    url(r'manage_like/$', views.manage_like, name='manage_like'),
+    url(r'delete_comment/$', views.delete_comment, name='delete_comment'),
+    url(r'home/$', views.home, name='home')
 ]

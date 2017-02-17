@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
+from django.db.models import Count
 import json
 from django.urls import reverse
 from blog.forms import *
@@ -59,19 +60,21 @@ def adminregistration(request):
              'form': form
          })
 
-
 @login_required(login_url="login/")
-def home(request):
+def dashboard(request):
 
     user_role = UserRole.objects.filter(user_id = request.user.id)
     role_id = user_role[0].role_id
-    post = Post.objects.filter()
-    return render(request,"home.html",
+    post = Post.objects.annotate(Count('comment')).order_by('updated_at')
+    return render(request,"dashboard.html",
         {
 		 'post': post,
          'role_id': role_id,
          'user_id': request.user.id
 		})
+
+def home(request):
+        return HttpResponse("hello")
 
 def createpost(request):
 
@@ -108,7 +111,7 @@ def createpost(request):
                     tag = Tags(id = tag_id)
                     )
 
-            return HttpResponseRedirect(reverse('blog:home'))
+            return HttpResponseRedirect(reverse('blog:dashboard'))
         else:
             return render(request, 'createpost.html', {
              'form': form,
@@ -173,7 +176,7 @@ def editpost(request, post_id):
                         post = Post(id=post_id),
                         tag = Tags(id = tag_id)
                     )
-        return HttpResponseRedirect(reverse('blog:home'))
+        return HttpResponseRedirect(reverse('blog:dashboard'))
     else:
         posts = Post.objects.get(id=post_id)
         posts_cat = PostCategory.objects.get(post_id = post_id)
@@ -195,13 +198,20 @@ def editpost(request, post_id):
 def deletepost(request, post_id):
 
     Post.objects.filter(id=post_id).delete()
-    return HttpResponseRedirect(reverse('blog:home'))
+    return HttpResponseRedirect(reverse('blog:dashboard'))
 
 def viewpost(request, post_id):
 
     post_tag = PostTag.objects.filter(post_id = post_id)
     post_cat = PostCategory.objects.filter(post_id = post_id)
     comments = Comment.objects.filter(post_id = post_id)
+    user_role = UserRole.objects.filter(user_id = request.user.id)
+    role_id = user_role[0].role_id
+    viewers = post_cat[0].post.viewers
+    viewers += 1
+    Post.objects.filter(id = post_id).update(
+                viewers = viewers
+                )
     tag_name = ''
     for pt in post_tag:
         tag_name += pt.tag.name.title() + ', '
@@ -223,6 +233,9 @@ def viewpost(request, post_id):
              'CommentForm': CommentForm,
              'post_id': post_id,
              'comments': comments,
+             'role_id': role_id,
+             'user_id': request.user.id,
+             'post_user_id': post_cat[0].post.user.id
          })
 
 def savecomment(request, post_id):
@@ -239,4 +252,36 @@ def savecomment(request, post_id):
                 )
         return HttpResponseRedirect(reverse('blog:viewpost', args=[post_id]))
 
+def manage_like(request):
 
+    if request.is_ajax():
+        cat_id = request.GET.get('cat_id', '')
+        like_val = request.GET.get('like_val', '')
+        like_val = int(like_val)
+        like_unlike_count = request.GET.get('like_unlike_count', '')
+        like_unlike_count = int(like_unlike_count)
+        like_unlike_count += 1
+        if like_val == 1:
+            comments = Comment.objects.filter(id = cat_id ).update(
+                is_like = like_val,
+                like_count = like_unlike_count
+            )
+        else:
+            comments = Comment.objects.filter(id = cat_id ).update(
+                is_like = like_val,
+                unlike_count = like_unlike_count
+            )
+        data = json.dumps(like_unlike_count)
+    else:
+        data = 'fail'
+    mimetype = 'application/json'
+    return HttpResponse(data, mimetype)
+
+def delete_comment(request):
+
+    if request.is_ajax():
+       cat_id = request.GET.get('cat_id', '')
+       Comment.objects.filter(id = cat_id ).delete()
+       data = ''
+       mimetype = 'application/json'
+       return HttpResponse(data, mimetype)
