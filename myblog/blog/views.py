@@ -4,11 +4,11 @@ from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
-from django.db.models import Count
+from django.db.models import Count, IntegerField, Sum
 import json
 from django.urls import reverse
 from blog.forms import *
-from .models import UserRole, Post, Category, Tags, PostCategory, PostTag, Comment
+from .models import *
 
 @csrf_protect
 def register(request):
@@ -230,6 +230,9 @@ def viewpost(request, post_id):
         user_name = pc.post.user.username.title()
 
     comment_form = CommentForm()
+    c = UserComment.objects.values('comment').\
+        annotate(like_sum=Sum('like_count'))
+    post_cmnt = UserComment.objects.filter(post_id = post_id, user_id=request.user.id)
     return render(request, 'viewpost.html', {
              'category_name': category_name,
              'post_title': post_title,
@@ -241,7 +244,9 @@ def viewpost(request, post_id):
              'comments': comments,
              'role_id': role_id,
              'user_id': request.user.id,
-             'post_user_id': post_cat[0].post.user.id
+             'post_user_id': post_cat[0].post.user.id,
+             'likecnt': c,
+             'post_cmnt': post_cmnt
          })
 
 def savecomment(request, post_id):
@@ -250,36 +255,48 @@ def savecomment(request, post_id):
         form = CommentForm(request.POST)
         if form.is_valid():
             comment = form.cleaned_data['comment']
-            Comment.objects.create(
+            comment1 = Comment.objects.create(
                 comment_text = comment,
                 post = Post(id = post_id),
                 user = User(id = user_id),
                 created_at = timezone.now()
+                )
+            UserComment.objects.create(
+                user = User(id = user_id),
+                comment = comment1,
+                post = Post(id = post_id)
+
                 )
         return HttpResponseRedirect(reverse('blog:viewpost', args=[post_id]))
 
 def manage_like(request):
 
     if request.is_ajax():
-        cat_id = request.GET.get('cat_id', '')
-        like_val = request.GET.get('like_val', '')
-        like_val = int(like_val)
-        like_unlike_count = request.GET.get('like_unlike_count', '')
-        like_unlike_count = int(like_unlike_count)
-        like_unlike_count += 1
-        if like_val == 1:
-            comments = Comment.objects.filter(id = cat_id ).update(
-                is_like = like_val,
-                like_count = like_unlike_count
-            )
+        cmnt_id = request.GET.get('cmnt_id', '')
+        like_cnt = request.GET.get('like_cnt', '')
+        post_id = request.GET.get('post_id', '')
+        like_cnt = int(like_cnt)
+        like_unlike_val = request.GET.get('like_unlike_val', '')
+        like_unlike_val = int(like_unlike_val)
+        comments = UserComment.objects.filter(comment_id= cmnt_id, user_id =request.user.id)
+        print comments.query
+        if not comments:
+            UserComment.objects.create(
+                user = User(id = request.user.id),
+                comment = Comment(id = cmnt_id),
+                like_count = like_cnt,
+                like_unlike = like_unlike_val,
+                post_id = post_id
+                )
         else:
-            comments = Comment.objects.filter(id = cat_id ).update(
-                is_like = like_val,
-                unlike_count = like_unlike_count
-            )
-        data = json.dumps(like_unlike_count)
+            UserComment.objects.filter(id = comments[0].id).update(
+                like_count = like_cnt,
+                like_unlike = like_unlike_val
+                )
+            
+        data = json.dumps('success')
     else:
-        data = 'fail'
+        data = json.dumps('fail')
     mimetype = 'application/json'
     return HttpResponse(data, mimetype)
 

@@ -1,38 +1,37 @@
-function manageCommentLike(id){
-       var like_val = 0;
-       var count;
-       var id_num = getNumericVal(id) ;
-       if (id == 'like'+id_num) {
-             like_val = 1 ;
-             count = $("#hiddenlike"+id_num).val();
-             
-         }
-         else {
-          like_val = 2 ;
-          count = $("#hiddenunlike"+id_num).val();
-         } 
-       	
-       $.getJSON( "/blog/manage_like", {
-                    cat_id: id_num,
-                    like_val: like_val,
-                    like_unlike_count: count
+function manageCommentLike(id, user_id, post_id){
+  
+  var id_num = getNumericVal(id);
+  var like_cnt = 0;
+  var like_unlike_val = 0;
+  var set_likecnt;
+  if(id == 'unlike'+id_num){
+      like_cnt = 1;
+      like_unlike_val =1;
+  }
+  $.getJSON( "/blog/manage_like", {
+                    cmnt_id: id_num,
+                    like_cnt: like_cnt,
+                    like_unlike_val: like_unlike_val,
+                    post_id: post_id
         }, function(data,status,xhr){
-        	if(status == 'success'){
-        		if(id == 'like'+id_num){
-              $("#hiddenlike"+id_num).val(data);
-        			
-              }
-        		else{
-					      $("#hiddenunlike"+id_num).val(data);
-        		}
-            var like_c = $("#hiddenlike"+id_num).val();
-            var unlike_c = $("#hiddenunlike"+id_num).val();
-            var final_val = like_c - unlike_c;
-            final_val >0 ?final_val = final_val :final_val =0;
-            $("#liketext"+id_num).val(final_val);
-        	}
-         
-        } );
+          set_likecnt = $("#likecnt"+id_num).val();
+          set_likecnt = parseInt(set_likecnt); 
+          if(data == 'success'){
+            if(id == 'unlike'+id_num){
+              document.getElementById("like"+id_num).style.display = "block";
+              document.getElementById("unlike"+id_num).style.display = "none";
+              $("#likecnt"+id_num).val(set_likecnt+1);
+            }
+            else{
+              document.getElementById("like"+id_num).style.display = "none";
+              document.getElementById("unlike"+id_num).style.display = "block";
+              set_likecnt = set_likecnt-1;
+              set_likecnt>0? set_likecnt=set_likecnt : set_likecnt=0;
+              $("#likecnt"+id_num).val(set_likecnt);
+            }
+          }
+        })
+
 }
 
 function deleteComment(id){

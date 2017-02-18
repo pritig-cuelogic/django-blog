@@ -16,9 +16,6 @@ class Comment(models.Model):
 	comment_text = models.TextField()
 	post = models.ForeignKey(Post, on_delete=models.CASCADE)
 	user = models.ForeignKey(User, on_delete=models.CASCADE)
-	is_like = models.IntegerField(default=0)
-	like_count = models.IntegerField(default=0)
-	unlike_count = models.IntegerField(default=0)
 	created_at = models.DateTimeField()
 
 class Category(models.Model):
@@ -38,3 +35,11 @@ class Tags(models.Model):
 class PostTag(models.Model):
 	post = models.ForeignKey(Post, on_delete=models.CASCADE)
 	tag = models.ForeignKey(Tags, on_delete=models.CASCADE)
+
+class UserComment(models.Model):
+	user = models.ForeignKey(User, on_delete=models.CASCADE)
+	comment = models.ForeignKey(Comment, on_delete=models.CASCADE)
+	post = models.ForeignKey(Post, on_delete=models.CASCADE)
+	like_count = models.IntegerField(default=0)
+	like_unlike = models.IntegerField(default=0)
+	
