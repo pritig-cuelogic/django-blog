@@ -1,41 +1,39 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %}Edit Post{% endblock %}
 {% block content %}
-
-<form method="post" action="./{{post_id}}">
-{% csrf_token %}
-    <table border="0">
-        <tr>
-            <td> Post Title  </td>
-            <td> {{ form.title}} </td>
-        </tr>
-        <tr>
-            <td> Post Description  </td>
-            <td> {{ form.content}} </td>
-        </tr>
-        <tr>
-            <td> Post category  </td>
-            <td>
-            <select id="id_category" name="category">
-                    <option value="">Select category</option>
-                    {% for cat in category %}
-                    <option value= {{cat.id}}
-                    {% if cat.id == category_id %}selected="selected"{% endif %}>
-                     {{cat.name}}</option>
-                    {% endfor %}
-                </select><br>
-            </td>
-        </tr>
-        <tr>
-            <td> Post Tags  </td>
-            <td><div class="ui-widget"> {{ form.tags}}</div> </td>
-        </tr>
-    </table>
-    
-    <input type="submit" value="Update Post" />
-</form>
-
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6">
+                <form role="form" method="post" action="./{{post_id}}">
+                    {% csrf_token %}
+                          <div class="form-group">
+                           <label> Post Title </label>
+                                {{ form.title}}
+                            </div>
+                            <div class="form-group">
+                            <label>Post Description </label>
+                            {{ form.content}}
+                            </div>
+                           <div class="form-group">
+                               <label>Post category</label>
+                                 <select id="id_category" name="category">
+                                <option value="">Select category</option>
+                                    {% for cat in category %}
+                                <option value= {{cat.id}}
+                                    {% if cat.id == category_id %}selected="selected"{% endif %}>
+                                        {{cat.name}}</option>
+                                         {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                            <label>Post Tags</label>
+                             <div class="ui-widget"> {{ form.tags}}</div>
+                        </div>
+                    <button type="submit" class="btn btn-primary">Update Post</button>
+                </form>
+            </div>
+        </div>
+    </div>
 <link rel="stylesheet" href="{% static 'myblog/css/jquery-ui.css' %}"
  type="text/css" media="all" />
 <script src="{% static 'myblog/js/jquery.min.js' %}" type="text/javascript">
@@ -44,3 +42,4 @@
 type="text/javascript"></script>
 <script src="{% static 'myblog/js/blog.js' %}"></script>
 {% endblock %}
+

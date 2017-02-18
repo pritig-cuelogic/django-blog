@@ -3,10 +3,14 @@ from django import forms
 from .models import Category
 
 class RegisterForm(forms.Form):
-	username = forms.CharField(label="Username", max_length=30)
-	email = forms.EmailField(label="Email", max_length=254)
-	password1 = forms.CharField(label="Password", max_length=30, widget=forms.PasswordInput)
-	password2 = forms.CharField(label="Confirm Password", max_length=30, widget=forms.PasswordInput)
+	username = forms.CharField(label="Username", max_length=30,
+		widget=forms.TextInput(attrs={'class' : 'form-control'}))
+	email = forms.EmailField(label="Email", max_length=254,
+		widget=forms.TextInput(attrs={'class' : 'form-control'}))
+	password1 = forms.CharField(label="Password", max_length=30,
+	 widget=forms.PasswordInput(attrs={'class' : 'form-control'}))
+	password2 = forms.CharField(label="Confirm Password", max_length=30,
+	 widget=forms.PasswordInput(attrs={'class' : 'form-control'}))
 
 	def clean(self):
 		cleaned_data = super(RegisterForm, self).clean()
@@ -17,13 +21,19 @@ class RegisterForm(forms.Form):
 		return self.cleaned_data
 
 class LoginForm(AuthenticationForm):
-	username = forms.CharField(label="MyUsername", max_length=30)
-	password = forms.CharField(label="Password", max_length=30, widget=forms.PasswordInput)
+	username = forms.CharField(label="MyUsername", max_length=30,
+		widget=forms.TextInput(attrs={'class' : 'form-control'}))
+	password = forms.CharField(label="Password", max_length=30, 
+		widget=forms.PasswordInput(attrs={'class' : 'form-control'}))
 
 class CreatePostForm(forms.Form):
-	title = forms.CharField(max_length=200)
-	content = forms.CharField(widget=forms.Textarea)
-	tags = forms.CharField(max_length=200)
+	title = forms.CharField(max_length=200,
+		widget=forms.TextInput(attrs={'class' : 'form-control'}))
+	content = forms.CharField(
+		widget=forms.Textarea(attrs={'class' : 'form-control'}))
+	tags = forms.CharField(max_length=200,
+		widget=forms.TextInput(attrs={'class' : 'form-control'}))
 
 class CommentForm(forms.Form):
-	comment = forms.CharField(max_length=500)
+	comment = forms.CharField(max_length=500,
+		widget=forms.TextInput(attrs={'class' : 'form-control'}))
