@@ -9,6 +9,7 @@ class Post(models.Model):
 	user = models.ForeignKey(User, on_delete=models.CASCADE)
 	created_at = models.DateTimeField()
 	updated_at = models.DateTimeField()
+	viewers = models.IntegerField(default=0)
 	is_active =  models.BooleanField(default=1)
 
 class Comment(models.Model):
@@ -34,3 +35,11 @@ class Tags(models.Model):
 class PostTag(models.Model):
 	post = models.ForeignKey(Post, on_delete=models.CASCADE)
 	tag = models.ForeignKey(Tags, on_delete=models.CASCADE)
+
+class UserComment(models.Model):
+	user = models.ForeignKey(User, on_delete=models.CASCADE)
+	comment = models.ForeignKey(Comment, on_delete=models.CASCADE)
+	post = models.ForeignKey(Post, on_delete=models.CASCADE)
+	like_count = models.IntegerField(default=0)
+	like_unlike = models.IntegerField(default=0)
+	

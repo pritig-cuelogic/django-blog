@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>{{ post_title }}</title>
+</head>
+<body>
+    <a href="/blog/dashboard">Dashboard</a>
+    {% load static %}
+    {% load mathfilters %}
+	<div style="width: 1000px;">
+	    <div><a href="/logout">Logout</a></div>
+		<h2>{{ post_title }}</h2>
+		<br>
+		<div>by {{user_name}}</div>
+		<div>Category: {{category_name}} | Tag: {{tag_name}}</div>
+		<p>{{post_content}}</p>
+	</div>
+	<h5>Comments</h5>
+	{% if comments.count >= 1 %}
+	    <ul>
+        {% for comment in comments %}
+            <div id="comment{{comment.id}}">
+            <li>{{comment.comment_text}}</li>
+            {% if role_id == 1 or user_id == post_user_id %}
+            <input type="button" value="delete" id="delete{{ comment.id }}"
+             onclick="deleteComment(this.id)"/>
+             {% endif %}
+             {% for c in likecnt %}
+             {% if comment.id == c.comment %}
+                {% for pc in post_cmnt %}
+                  {% if comment.id == pc.comment.id %}
+                     <input type="button" value="like" id="like{{comment.id}}"
+                     onclick="manageCommentLike(this.id, {{user_id}}, {{post_id}})"
+                     {% if pc.like_unlike == 0 %} style="display: none;" {% endif %} />
+                     <input type="button" value="unlike" id="unlike{{comment.id}}"
+                     onclick="manageCommentLike(this.id, {{user_id}}, {{post_id}})"
+                     {% if pc.like_unlike == 1 %} style="display: none;" {% endif %} /> 
+                     <input type="text" id="likecnt{{comment.id}}" value="{{c.like_sum}}"/>
+                 {%  endif %}
+                {%  endfor %}
+             {% endif %}
+             {% endfor %}          
+             </div>
+
+        {% endfor %}
+        </ul>
+	{% endif %}
+	<form method="post" action="../savecomment/{{post_id}}">
+	{% csrf_token %}
+	<div>{{CommentForm.comment}}
+     <input type="submit" value="post" />
+	</div>
+    
+    </form>
+    <script src="{% static 'myblog/js/jquery.min.js' %}" type="text/javascript">
+</script>
+<script src="{% static 'myblog/js/blog-ajax.js' %}"></script>
+</body>
+</html>

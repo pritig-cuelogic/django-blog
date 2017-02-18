@@ -24,3 +24,6 @@ class CreatePostForm(forms.Form):
 	title = forms.CharField(max_length=200)
 	content = forms.CharField(widget=forms.Textarea)
 	tags = forms.CharField(max_length=200)
+
+class CommentForm(forms.Form):
+	comment = forms.CharField(max_length=500)

@@ -35,8 +35,9 @@ $(function() {
                 terms.push( ui.item.value );
                 terms.push( "" );
                 this.value = terms.join( ", " );
-                tags_id_arr.push(ui.item.id)
                 return false;
             }
     });
+
+
 });
