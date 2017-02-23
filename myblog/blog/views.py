@@ -60,7 +60,7 @@ def adminregistration(request):
              'form': form
          })
 
-@login_required(login_url="login/")
+@login_required(login_url="/blog/login/")
 def dashboard(request):
 
     user_role = UserRole.objects.filter(user_id = request.user.id)
@@ -211,8 +211,11 @@ def viewpost(request, post_id):
     post_tag = PostTag.objects.filter(post_id = post_id)
     post_cat = PostCategory.objects.filter(post_id = post_id)
     comments = Comment.objects.filter(post_id = post_id)
-    user_role = UserRole.objects.filter(user_id = request.user.id)
-    role_id = user_role[0].role_id
+    if request.user.id:
+        user_role = UserRole.objects.filter(user_id = request.user.id)
+        role_id = user_role[0].role_id
+    else:
+        role_id = 0
     viewers = post_cat[0].post.viewers
     viewers += 1
     Post.objects.filter(id = post_id).update(

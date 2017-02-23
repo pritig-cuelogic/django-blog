@@ -64,14 +64,14 @@
             	{% for comment in comments %}
             		{% ifchanged comment.post.title %}
             		<div class="post-preview">
-            			<a href="post.html">
-                        <h2 class="post-title">
+            			<a href="/blog/viewpost/{{comment.post.id}}">
+                        <div class="post-title">
                             {{comment.post.title}}
-                        </h2>
-                        <h3 class="post-subtitle">
+                        </div>
+                        </a>
+                        <div class="post-subtitle">
                             {{comment.post.content}}
-                        </h3>
-                    	</a>
+                        </div>
                     	<p class="post-meta">Post updated <a href="#"></a> on 
                     		{{comment.post.updated_at|date:"d M Y" }}</p>
             		</div>

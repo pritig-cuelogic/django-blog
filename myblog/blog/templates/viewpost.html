@@ -41,6 +41,7 @@
         </ul>
         {% endif %}
         </div>
+        {% if role_id != 0 %}
         <form method="post" action="../savecomment/{{post_id}}">
         {% csrf_token %}
         <div class="col-lg-8">{{CommentForm.comment}}</div>
@@ -48,7 +49,7 @@
         </div>
     
         </form>
-	   
+	   {% endif %}
     </div>
 </div>
 <script src="{% static 'myblog/js/jquery.min.js' %}" type="text/javascript">
