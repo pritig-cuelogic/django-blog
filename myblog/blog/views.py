@@ -150,6 +150,9 @@ def get_tags(request):
     mimetype = 'application/json'
     return HttpResponse(data, mimetype)
 
+def deleteuser(request):
+    User.objects.filter()
+
 def editpost(request, post_id):
 
     cat =  Category.objects.all().order_by('id')

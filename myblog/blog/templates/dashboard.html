@@ -1,7 +1,11 @@
 {% extends "base.html" %}
 {% block content %}
 <div style="float:right;margin-right: 81px;">
-    <a href="/blog/createpost" class="btn btn-primary" role="button">Add Post</a> </div>    
+    <a href="/blog/createpost" class="btn btn-primary" role="button">Add Post</a>
+    {% if role_id == 1 %}
+    <a href="/blog/deleteuser" class="btn btn-primary" role="button">Delete User</a>
+    {% endif %}
+     </div>    
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
