@@ -202,6 +202,8 @@ def viewpost(request, post_id):
     post_tag = PostTag.objects.filter(post_id = post_id)
     post_cat = PostCategory.objects.filter(post_id = post_id)
     comments = Comment.objects.filter(post_id = post_id)
+    user_role = UserRole.objects.filter(user_id = request.user.id)
+    role_id = user_role[0].role_id
     tag_name = ''
     for pt in post_tag:
         tag_name += pt.tag.name.title() + ', '
@@ -223,6 +225,9 @@ def viewpost(request, post_id):
              'CommentForm': CommentForm,
              'post_id': post_id,
              'comments': comments,
+             'role_id': role_id,
+             'user_id': request.user.id,
+             'post_user_id': post_cat[0].post.user.id
          })
 
 def savecomment(request, post_id):
@@ -239,4 +244,16 @@ def savecomment(request, post_id):
                 )
         return HttpResponseRedirect(reverse('blog:viewpost', args=[post_id]))
 
+def manage_like(request):
 
+    if request.is_ajax():
+        cat_id = request.GET.get('cat_id', '')
+        like_val = request.GET.get('like_val', '')
+        comments = Comment.objects.filter(id = cat_id ).update(
+                is_like = like_val
+            )
+        data = ''
+    else:
+        data = 'fail'
+    mimetype = 'application/json'
+    return HttpResponse(data, mimetype)
