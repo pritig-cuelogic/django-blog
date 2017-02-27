@@ -1,6 +1,6 @@
 function manageCommentLike(id){
        var like_val = 0;
-       var id_num = id.replace( /^\D+/g, '');
+       var id_num = getNumericVal(id) ;
        (id == 'like'+id_num)?like_val = 1: like_val = 2;
        	
        $.getJSON( "/blog/manage_like", {
@@ -19,4 +19,19 @@ function manageCommentLike(id){
         	}
          
         } );
+}
+
+function deleteComment(id){
+  var id_num = getNumericVal(id);
+  $.getJSON( "/blog/delete_comment", {
+          cat_id: id_num
+        },function(data, status){
+            
+              document.getElementById("comment"+id_num).style.visibility='hidden'
+           
+        });
+}
+
+function getNumericVal(id){
+  return id.replace( /^\D+/g, '');
 }

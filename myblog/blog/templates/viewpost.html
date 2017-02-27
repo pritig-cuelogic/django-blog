@@ -17,6 +17,7 @@
 	{% if comments.count >= 1 %}
 	    <ul>
         {% for comment in comments %}
+            <div id="comment{{ comment.id }}">
             <li>{{comment.comment_text}}</li>
             {% if role_id == 1 or user_id == post_user_id %}
             <input type="button" value="like" id="like{{ comment.id }}"
@@ -26,6 +27,10 @@
              onclick="manageCommentLike(this.id)" 
              {% if comment.is_like == 1  %} hidden="hidden" {% endif %}
              />
+             <input type="button" value="delete" id="delete{{ comment.id }}"
+             onclick="deleteComment(this.id)"
+             >
+             </div>
              {% endif %}
         {% endfor %}
         </ul>

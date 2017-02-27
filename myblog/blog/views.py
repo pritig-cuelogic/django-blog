@@ -257,3 +257,12 @@ def manage_like(request):
         data = 'fail'
     mimetype = 'application/json'
     return HttpResponse(data, mimetype)
+
+def delete_comment(request):
+
+    if request.is_ajax():
+       cat_id = request.GET.get('cat_id', '')
+       Comment.objects.filter(id = cat_id ).delete()
+       data = 'success'
+       mimetype = 'application/json'
+       return HttpResponse(data, mimetype)
